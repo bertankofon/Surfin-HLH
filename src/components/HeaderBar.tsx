@@ -20,6 +20,7 @@ export default function HeaderBar({ usd, setUsd, leverage, setLeverage, isCross,
   const { openAccountModal } = useAccountModal();
 
   const short = address ? `${address.slice(0, 6)}…${address.slice(-4)}` : 'Connect';
+  const notional = usd * leverage;
 
   return (
     <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
@@ -57,13 +58,15 @@ export default function HeaderBar({ usd, setUsd, leverage, setLeverage, isCross,
             <label className="text-xs font-medium text-gray-700">USD Amount</label>
             <div className="text-xs font-semibold text-gray-900">${usd}</div>
           </div>
-          <input type="range" min={10} max={100} step={10} value={usd} onChange={(e) => setUsd(Number(e.target.value))} className="w-full" />
+          <input type="range" min={1} max={100} step={1} value={usd} onChange={(e) => setUsd(Number(e.target.value))} className="w-full" />
 
           <div className="mt-3 grid grid-cols-2 gap-3">
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="text-xs font-medium text-gray-700">Leverage</label>
-                <div className="text-xs font-semibold text-gray-900">{leverage}x</div>
+                <div className="text-xs font-semibold text-gray-900">
+                  {leverage}x • ${Number(notional).toLocaleString()}
+                </div>
               </div>
               <input type="range" min={1} max={20} step={1} value={leverage} onChange={(e) => setLeverage(Math.max(1, Number(e.target.value || 1)))} className="w-full" />
             </div>

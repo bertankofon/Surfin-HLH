@@ -59,7 +59,8 @@ export default function SwipeDeck({ usd, isCross, leverage }: Props) {
       const rawPx = (Number(topPx) * buf).toString();
       const px = formatPerpPx(rawPx, szDecimals);
 
-      const sizeFromUsd = Number(usd) / Number(px);
+      const notionalUsd = Number(usd) * Number(leverage || 1);
+      const sizeFromUsd = notionalUsd / Number(px);
       if (!isFinite(sizeFromUsd) || sizeFromUsd <= 0) throw new Error('Invalid USD/price');
       const sz = formatSz(sizeFromUsd, szDecimals);
 
@@ -80,7 +81,7 @@ export default function SwipeDeck({ usd, isCross, leverage }: Props) {
 
       const res = await agentExchangeClient.order(actionArgs);
       if (res.status === 'ok') {
-        setBanner({ type: 'ok', text: `${symbol} ${side.toUpperCase()} submitted ($${usd})` });
+        setBanner({ type: 'ok', text: `${symbol} ${side.toUpperCase()} submitted ($${notionalUsd})` });
         next();
       } else {
         throw new Error('Order failed');
