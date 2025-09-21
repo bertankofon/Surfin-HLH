@@ -25,43 +25,43 @@ export default function PositionsList() {
 
   if (error) {
     return (
-      <div className="bg-white rounded-lg border border-red-200 p-6">
-        <h2 className="text-xl font-bold text-red-600 mb-2">Positions Error</h2>
-        <p className="text-red-500 text-sm">{error.message}</p>
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-red-500/30 p-6 shadow-lg">
+        <h2 className="text-xl font-bold text-red-400 mb-2">🌊 Positions Error</h2>
+        <p className="text-red-300 text-sm">{error.message}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-      <h2 className="text-xl font-bold text-gray-900 mb-4">Your Positions</h2>
+    <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-blue-500/20 p-6 shadow-lg ocean-glow">
+      <h2 className="text-xl font-bold text-white mb-4">🏄‍♂️ Your Positions</h2>
 
       {isLoading && (
         <div className="space-y-4">
           <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-            <div className="h-20 bg-gray-100 rounded"></div>
+            <div className="h-4 bg-slate-600 rounded w-1/4 mb-2"></div>
+            <div className="h-20 bg-slate-700 rounded"></div>
           </div>
         </div>
       )}
 
       {hasData && balance && (
-        <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+        <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-slate-700/50 rounded-xl border border-blue-500/20">
           <div className="text-center">
-            <p className="text-sm text-gray-500">Total Value</p>
-            <p className="font-bold text-lg">
+            <p className="text-sm text-blue-300">Total Value</p>
+            <p className="font-bold text-lg text-white">
               ${parseFloat(balance.total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-sm text-gray-500">Available</p>
-            <p className="font-bold text-lg text-green-600">
+            <p className="text-sm text-blue-300">Available</p>
+            <p className="font-bold text-lg text-green-400">
               ${parseFloat(balance.used).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-sm text-gray-500">Total PnL</p>
-            <p className={`font-bold text-lg ${parseFloat(summary.totalPnl) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <p className="text-sm text-blue-300">Total PnL</p>
+            <p className={`font-bold text-lg ${parseFloat(summary.totalPnl) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
               {parseFloat(summary.totalPnl) >= 0 ? '+' : ''}
               ${parseFloat(summary.totalPnl).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
@@ -71,11 +71,11 @@ export default function PositionsList() {
 
       {hasData && !hasPositions && (
         <div className="text-center py-8">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-            <span className="text-gray-400 text-2xl">📊</span>
+          <div className="w-16 h-16 mx-auto mb-4 bg-slate-700/50 rounded-full flex items-center justify-center border border-blue-500/30">
+            <span className="text-blue-300 text-2xl">🏄‍♀️</span>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No Open Positions</h3>
-          <p className="text-gray-500">Open your first position to start trading!</p>
+          <h3 className="text-lg font-medium text-white mb-2">No Open Positions</h3>
+          <p className="text-blue-300">Start surfing the waves of DeFi!</p>
         </div>
       )}
 
@@ -94,22 +94,22 @@ export default function PositionsList() {
             return (
               <div
                 key={index}
-                className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors"
+                className="border border-blue-500/20 rounded-xl p-4 bg-slate-700/30 hover:border-blue-400/40 transition-colors shadow-lg"
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
-                    <div className={`w-3 h-3 rounded-full ${position.side === 'long' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <div className={`w-3 h-3 rounded-full ${position.side === 'long' ? 'bg-green-400' : 'bg-red-400'}`}></div>
                     <div>
-                      <h3 className="font-bold text-gray-900">{position.coin}</h3>
-                      <p className="text-sm text-gray-500 capitalize">{position.side}</p>
+                      <h3 className="font-bold text-white">{position.coin}</h3>
+                      <p className="text-sm text-blue-300 capitalize">{position.side}</p>
                     </div>
                   </div>
 
                   <div className="text-right">
-                    <p className={`font-bold ${isProfitable ? 'text-green-600' : 'text-red-600'}`}>
+                    <p className={`font-bold ${isProfitable ? 'text-green-400' : 'text-red-400'}`}>
                       {isProfitable ? '+' : ''}${pnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
-                    <p className={`text-sm ${isProfitable ? 'text-green-500' : 'text-red-500'}`}>
+                    <p className={`text-sm ${isProfitable ? 'text-green-300' : 'text-red-300'}`}>
                       {isProfitable ? '+' : ''}{percentage.toFixed(2)}%
                     </p>
                   </div>
@@ -117,22 +117,22 @@ export default function PositionsList() {
 
                 <div className="grid grid-cols-3 gap-4 text-sm">
                   <div>
-                    <p className="text-gray-500">Size</p>
-                    <p className="font-medium">{parseFloat(position.size).toFixed(4)}</p>
+                    <p className="text-blue-300">Size</p>
+                    <p className="font-medium text-white">{parseFloat(position.size).toFixed(4)}</p>
                   </div>
                   <div>
-                    <p className="text-gray-500">Entry Price</p>
-                    <p className="font-medium">${parseFloat(position.entryPrice).toLocaleString()}</p>
+                    <p className="text-blue-300">Entry Price</p>
+                    <p className="font-medium text-white">${parseFloat(position.entryPrice).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-gray-500">Mark Price</p>
-                    <p className="font-medium">${parseFloat(position.markPrice).toLocaleString()}</p>
+                    <p className="text-blue-300">Mark Price</p>
+                    <p className="font-medium text-white">${parseFloat(position.markPrice).toLocaleString()}</p>
                   </div>
                 </div>
 
-                <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="mt-3 pt-3 border-t border-blue-500/20">
                   <button
-                    className="w-full py-2 text-sm border border-gray-300 rounded text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    className="w-full py-2 text-sm border border-cyan-500/50 rounded-lg text-cyan-300 hover:bg-cyan-500/20 transition-colors disabled:opacity-50 font-medium"
                     disabled={!agentExchangeClient || isClosing || isApproving}
                     onClick={async () => {
                       if (!agentExchangeClient) return;
@@ -187,10 +187,10 @@ export default function PositionsList() {
                   </button>
 
                   {isError && (
-                    <p className="mt-2 text-xs text-red-600">Close failed</p>
+                    <p className="mt-2 text-xs text-red-400">🌊 Close failed</p>
                   )}
                   {isClosed && (
-                    <p className="mt-2 text-xs text-green-600">Position closed</p>
+                    <p className="mt-2 text-xs text-green-400">🏄‍♂️ Position closed</p>
                   )}
                 </div>
               </div>
@@ -200,9 +200,9 @@ export default function PositionsList() {
       )}
 
       {hasPositions && (
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <div className="flex justify-between text-sm text-gray-600">
-            <span>Open Positions: {summary.openPositions}</span>
+        <div className="mt-6 pt-4 border-t border-blue-500/20">
+          <div className="flex justify-between text-sm text-blue-300">
+            <span>🏄‍♂️ Open Positions: {summary.openPositions}</span>
             <span>Long: {summary.longPositions} | Short: {summary.shortPositions}</span>
           </div>
         </div>

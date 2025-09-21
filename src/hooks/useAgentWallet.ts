@@ -11,6 +11,8 @@ export function useAgentWallet() {
   const [agentExchangeClient, setAgentExchangeClient] = useState<any>(null);
   const [isApproving, setIsApproving] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // LocalStorage'dan agent wallet'ı yükle
   useEffect(() => {
@@ -31,6 +33,7 @@ export function useAgentWallet() {
     if (!exchangeClient || !address) return;
 
     setIsApproving(true);
+    setError(null);
     try {
       // 1. Yeni private key oluştur
       const privateKey = generatePrivateKey();
@@ -52,12 +55,24 @@ export function useAgentWallet() {
         setAgentWallet(agentAccount);
         setAgentExchangeClient(createExchangeClient(agentAccount));
         setIsApproved(true);
+        setShowSuccess(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Agent approval failed:', error);
+      // Set user-friendly error message
+      const errorMessage = error?.message || error?.toString() || 'Unknown error occurred';
+      setError(errorMessage);
     } finally {
       setIsApproving(false);
     }
+  };
+
+  const clearError = () => {
+    setError(null);
+  };
+
+  const clearSuccess = () => {
+    setShowSuccess(false);
   };
 
   return {
@@ -66,5 +81,9 @@ export function useAgentWallet() {
     isApproved,
     isApproving,
     approveAgent,
+    error,
+    clearError,
+    showSuccess,
+    clearSuccess,
   };
 }

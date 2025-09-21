@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import TokenCard from './TokenCard';
+import { useHeader } from '@/contexts/HeaderContext';
 import { SUPPORTED_COINS, DEFAULT_BUILDER_FEE_TENTH_BPS } from '@/lib/constants';
 import { useMarketData } from '@/hooks/useMarketData';
 import { useHyperliquid } from '@/hooks/useHyperliquid';
@@ -17,6 +18,7 @@ type Props = {
 };
 
 export default function SwipeDeck({ usd, isCross, leverage }: Props) {
+  const { isExpanded } = useHeader();
   const { prices } = useMarketData();
   const { canTrade, exchangeClient } = useHyperliquid();
   const { agentExchangeClient } = useAgentWallet();
@@ -95,19 +97,20 @@ export default function SwipeDeck({ usd, isCross, leverage }: Props) {
   };
 
   return (
-    <div className="w-full min-h-[64vh] flex items-center justify-center p-4">
+    <div className={`w-full ${isExpanded ? 'min-h-[40vh] flex items-start justify-center pt-2' : 'min-h-[64vh] flex items-center justify-center'} p-4`}>
       <div className={`relative ${submitting ? 'pointer-events-none' : ''}`}>
         {current ? (
           <TokenCard symbol={symbol!} name={name} price={price} onSwipe={handleSwipe} />
         ) : (
-          <div className="text-center text-gray-600">
-            <div className="text-2xl font-semibold mb-2">You're all caught up</div>
+          <div className="text-center text-blue-300">
+            <div className="text-2xl font-semibold mb-2">🏄‍♀️ You've surfed all the waves!</div>
             <div className="text-sm">No more assets in deck</div>
+            <div className="mt-4 text-xs text-blue-400">Come back later for more trading opportunities</div>
           </div>
         )}
         {banner && (
-          <div className={`absolute left-1/2 -translate-x-1/2 bottom-[-3rem] px-3 py-1.5 rounded text-sm ${banner.type === 'ok' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>
-            {banner.text}
+          <div className={`absolute left-1/2 -translate-x-1/2 ${isExpanded ? 'bottom-[-2rem]' : 'bottom-[-3rem]'} px-4 py-2 rounded-lg text-sm font-medium shadow-lg ${banner.type === 'ok' ? 'bg-green-500/90 text-white' : 'bg-red-500/90 text-white'}`}>
+            {banner.type === 'ok' ? '🏄‍♂️ ' : '🌊 '}{banner.text}
           </div>
         )}
       </div>

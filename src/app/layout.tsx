@@ -29,6 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <title>Surfin - Ride the Waves of DeFi</title>
+        <meta name="description" content="Surf the waves of decentralized finance with Surfin - your gateway to trading and DeFi" />
+        <link rel="icon" href="/logo.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
