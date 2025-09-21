@@ -1,10 +1,7 @@
-
-
-
 'use client';
 
-import Link from 'next/link';
 import { useAccount } from 'wagmi';
+import { useConnectModal, useAccountModal } from '@rainbow-me/rainbowkit';
 import { useAgentWallet } from '@/hooks/useAgentWallet';
 
 type Props = {
@@ -19,18 +16,29 @@ type Props = {
 export default function HeaderBar({ usd, setUsd, leverage, setLeverage, isCross, setIsCross }: Props) {
   const { address, isConnected } = useAccount();
   const { isApproved, approveAgent, isApproving } = useAgentWallet();
+  const { openConnectModal } = useConnectModal();
+  const { openAccountModal } = useAccountModal();
+
   const short = address ? `${address.slice(0, 6)}…${address.slice(-4)}` : 'Connect';
 
   return (
     <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
       <div className="max-w-md mx-auto p-3 pb-2">
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-300'}`} />
-            <span className="text-sm text-gray-900">{short}</span>
-          </div>
+          <button
+            type="button"
+            onClick={() => (isConnected ? openAccountModal?.() : openConnectModal?.())}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-900 text-white text-sm border border-white/10"
+            aria-label={isConnected ? 'Wallet menu' : 'Connect wallet'}
+          >
+            <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-400'}`} />
+            <span className="font-medium">{short}</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" className="opacity-90">
+              <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
           <div className="flex items-center gap-3">
-            <Link href="/positions" className="text-sm text-blue-600 underline">Positions</Link>
             {!isApproved && isConnected && (
               <button
                 type="button"

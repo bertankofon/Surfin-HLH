@@ -2,7 +2,9 @@
 
 import { useRef, useState, useMemo } from 'react';
 import { useAsset24h } from '@/hooks/useAsset24h';
+import { useCoinInfo } from '@/hooks/useCoinInfo';
 import MiniChart from '@/components/MiniChart';
+import { formatCompactUsd } from '@/lib/formatting';
 
 type Props = {
   symbol: string;
@@ -13,6 +15,8 @@ type Props = {
 
 export default function TokenCard({ symbol, name, price, onSwipe }: Props) {
   const { changePct } = useAsset24h(symbol);
+  const { image, marketCap, rank, volumeUsd } = useCoinInfo(symbol);
+
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [drag, setDrag] = useState({ x: 0, y: 0, active: false, startX: 0, startY: 0 });
 
@@ -26,11 +30,15 @@ export default function TokenCard({ symbol, name, price, onSwipe }: Props) {
     setDrag({ x: 0, y: 0, active: false, startX: 0, startY: 0 });
   };
 
-  // Placeholder mini sparkline (basit çizgi; gerçek data istersek ayrı hook ile doldururuz)
+  // Placeholder mini sparkline path (kept in case we need it)
   const points = useMemo(() => {
     const arr = Array.from({ length: 20 }, (_, i) => 50 + Math.sin(i / 2) * 12);
     return arr.map((y, i) => `${(i / 19) * 280},${y}`).join(' ');
   }, []);
+
+  const pctBadgeClass = typeof changePct === 'number'
+    ? (changePct >= 0 ? 'bg-green-50 text-green-700 ring-1 ring-green-200' : 'bg-red-50 text-red-700 ring-1 ring-red-200')
+    : 'bg-gray-100 text-gray-500 ring-1 ring-gray-200';
 
   return (
     <div
@@ -48,22 +56,47 @@ export default function TokenCard({ symbol, name, price, onSwipe }: Props) {
       onTouchMove={(e) => { const t = e.touches[0]; if (t) handleMove(t.clientX, t.clientY); }}
       onTouchEnd={handleEnd}
     >
-      <div className="relative p-6">
-        <div className="flex items-end justify-between mb-3">
-          <div>
-            <div className="text-2xl font-bold text-gray-900">{symbol}</div>
-            {name && <div className="text-sm text-gray-500">{name}</div>}
+      <div className="relative p-6 pb-5">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center">
+              {image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={image} alt={symbol} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-sm font-semibold text-gray-700">{symbol[0]}</span>
+              )}
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-900">{name ?? symbol}</div>
+              <div className="text-xs text-gray-500">{symbol}</div>
+            </div>
           </div>
+
           <div className="text-right">
-            <div className="text-2xl font-semibold text-gray-900">${price ? Number(price).toLocaleString() : '-'}</div>
-            <div className={`text-xs ${typeof changePct === 'number' ? (changePct >= 0 ? 'text-green-600' : 'text-red-600') : 'text-gray-500'}`}>
-              {typeof changePct === 'number' ? `${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}% 24h` : '—'}
+            <div className="text-2xl font-semibold text-gray-900">
+              {price ? `$${Number(price).toLocaleString()}` : '-'}
+            </div>
+            <div className="mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap {pctBadgeClass}">
+              <span className={pctBadgeClass.replace(' ring-1', '')}>
+                {typeof changePct === 'number' ? `${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}%` : '—'}
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="my-2">
-          <MiniChart symbol={symbol} height={132} />
+        <div className="mt-1">
+          <div className="text-sm font-semibold text-gray-800 mb-2">Price Chart (24h)</div>
+          <MiniChart symbol={symbol} height={160} />
+        </div>
+
+        <div className="mt-5">
+          <div className="text-sm font-semibold text-gray-800 mb-3">Token Stats</div>
+          <div className="grid grid-cols-3 gap-3">
+            <StatPill label="24h Vol" value={formatCompactUsd(volumeUsd)} />
+            <StatPill label="Market Cap" value={formatCompactUsd(marketCap)} />
+            <StatPill label="Rank" value={rank ? `#${rank}` : '-'} />
+          </div>
         </div>
 
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -79,6 +112,15 @@ export default function TokenCard({ symbol, name, price, onSwipe }: Props) {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function StatPill({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-white ring-1 ring-gray-200 shadow-sm px-3 py-3 text-center">
+      <div className="text-base font-semibold text-gray-900">{value}</div>
+      <div className="text-[10px] uppercase tracking-wide text-gray-500 mt-0.5">{label}</div>
     </div>
   );
 }

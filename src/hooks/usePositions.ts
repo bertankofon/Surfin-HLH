@@ -102,7 +102,7 @@ export function usePositions() {
     isLoading: isLoadingState || isLoadingOrders,
     error,
     hasPositions: positions.length > 0,
-    hasOrders: openOrders?.length > 0,
+    hasOrders: openOrders?.length && openOrders.length > 0,
     
     // Helpers
     getPosition: (coinSymbol: string) => 

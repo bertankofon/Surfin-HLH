@@ -20,3 +20,14 @@ export function tenthBpsToPercentString(f: number): `${string}%` {
   const pct = f / 1000;
   return `${trimZeros(pct.toFixed(4))}%`;
 }
+
+export function formatCompactUsd(n?: number | null) {
+  if (n == null || !isFinite(n)) return '-';
+  // Compact USD: $12.4M, $824B
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    notation: 'compact',
+    maximumFractionDigits: 2,
+  }).format(n).replace(/\s/g, '');
+}
