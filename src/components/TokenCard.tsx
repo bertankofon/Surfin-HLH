@@ -20,9 +20,21 @@ export default function TokenCard({ symbol, name, price, onSwipe }: Props) {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [drag, setDrag] = useState({ x: 0, y: 0, active: false, startX: 0, startY: 0 });
 
-  const handleStart = (x: number, y: number) => setDrag({ x: 0, y: 0, active: true, startX: x, startY: y });
-  const handleMove = (x: number, y: number) => setDrag(p => p.active ? ({ ...p, x: x - p.startX, y: y - p.startY }) : p);
+  const handleStart = (x: number, y: number) => {
+    setDrag({ x: 0, y: 0, active: true, startX: x, startY: y });
+    // Sayfa scroll'unu engelle
+    document.body.style.overflow = 'hidden';
+  };
+
+  const handleMove = (x: number, y: number) => {
+    if (!drag.active) return;
+    setDrag(p => ({ ...p, x: x - p.startX, y: y - p.startY }));
+  };
+
   const handleEnd = () => {
+    // Sayfa scroll'unu geri aç
+    document.body.style.overflow = 'unset';
+    
     const tx = 100, ty = 100;
     if (drag.y < -ty) onSwipe('up');
     else if (drag.x > tx) onSwipe('right');
@@ -52,9 +64,20 @@ export default function TokenCard({ symbol, name, price, onSwipe }: Props) {
       onMouseMove={(e) => drag.active && handleMove(e.clientX, e.clientY)}
       onMouseUp={handleEnd}
       onMouseLeave={() => drag.active && handleEnd()}
-      onTouchStart={(e) => { const t = e.touches[0]; if (t) handleStart(t.clientX, t.clientY); }}
-      onTouchMove={(e) => { const t = e.touches[0]; if (t) handleMove(t.clientX, t.clientY); }}
-      onTouchEnd={handleEnd}
+      onTouchStart={(e) => { 
+        e.preventDefault(); // Sayfa scroll'unu engelle
+        const t = e.touches[0]; 
+        if (t) handleStart(t.clientX, t.clientY); 
+      }}
+      onTouchMove={(e) => { 
+        e.preventDefault(); // Sayfa scroll'unu engelle
+        const t = e.touches[0]; 
+        if (t) handleMove(t.clientX, t.clientY); 
+      }}
+      onTouchEnd={(e) => {
+        e.preventDefault();
+        handleEnd();
+      }}
     >
       <div className="relative p-6 pb-5">
         <div className="flex items-start justify-between mb-4">
