@@ -44,7 +44,13 @@ export default function HeaderBar({ usd, setUsd, leverage, setLeverage, isCross,
               height={28} 
               className="rounded-lg"
             />
-            <div className="text-white font-bold text-lg">Surfin</div>
+            <Image 
+              src="/image-removebg-preview (10).png" 
+              alt="Surfin" 
+              width={120} 
+              height={32} 
+              className="h-8 -ml-2"
+            />
           </div>
 
           {/* Wallet & Trading Status */}

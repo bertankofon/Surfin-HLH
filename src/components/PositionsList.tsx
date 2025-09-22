@@ -94,7 +94,9 @@ export default function PositionsList() {
             return (
               <div
                 key={index}
-                className="border border-blue-500/20 rounded-xl p-4 bg-slate-700/30 hover:border-blue-400/40 transition-colors shadow-lg"
+                className={`border border-blue-500/20 rounded-xl p-4 bg-slate-700/30 hover:border-blue-400/40 transition-colors shadow-lg ${
+                  isClosed ? 'opacity-50 pointer-events-none' : ''
+                }`}
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
@@ -133,10 +135,11 @@ export default function PositionsList() {
                 <div className="mt-3 pt-3 border-t border-blue-500/20">
                   <button
                     className="w-full py-2 text-sm border border-cyan-500/50 rounded-lg text-cyan-300 hover:bg-cyan-500/20 transition-colors disabled:opacity-50 font-medium"
-                    disabled={!agentExchangeClient || isClosing || isApproving}
+                    disabled={!agentExchangeClient || isClosing || isApproving || isClosed}
                     onClick={async () => {
                       if (!agentExchangeClient) return;
                       if (!symbol) return;
+                      if (isClosed) return; // Prevent multiple clicks
 
                       try {
                         setCloseStatus(symbol, 'loading');
@@ -175,7 +178,7 @@ export default function PositionsList() {
 
                         console.log('[Close] Order response', result);
                         setCloseStatus(symbol, 'success');
-                        setTimeout(() => setCloseStatus(symbol, 'idle'), 2000);
+                        // Don't reset to idle after success - keep it closed
                       } catch (e) {
                         console.error('Close position failed:', e);
                         setCloseStatus(symbol, 'error');
@@ -183,14 +186,14 @@ export default function PositionsList() {
                       }
                     }}
                   >
-                    {isClosing ? 'Closing...' : isApproving ? 'Approving...' : 'Close Position'}
+                    {isClosing ? 'Closing...' : isApproving ? 'Approving...' : isClosed ? 'Position Closed' : 'Close Position'}
                   </button>
 
                   {isError && (
                     <p className="mt-2 text-xs text-red-400">🌊 Close failed</p>
                   )}
                   {isClosed && (
-                    <p className="mt-2 text-xs text-green-400">🏄‍♂️ Position closed</p>
+                    <p className="mt-2 text-xs text-green-400">🏄‍♂️ Position closed successfully</p>
                   )}
                 </div>
               </div>
