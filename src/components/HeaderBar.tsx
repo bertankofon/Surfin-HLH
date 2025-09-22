@@ -113,15 +113,14 @@ export default function HeaderBar({ usd, setUsd, leverage, setLeverage, isCross,
         {/* Collapsible Controls */}
         {isExpanded && (
           <div className="bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-sm rounded-xl p-4 border border-blue-500/30 shadow-lg mb-2">
-            {/* Wave Size */}
+            {/* USD per Swipe */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex flex-col">
                   <label className="text-sm font-bold text-blue-200 flex items-center gap-2">
                     <span>💰</span>
-                    <span>Wave Size</span>
+                    <span>USD per Swipe</span>
                   </label>
-                  <span className="text-xs text-blue-400 mt-0.5">Trading amount in USD</span>
                 </div>
                 <div className="text-sm font-bold text-white bg-blue-600/20 px-3 py-1 rounded-full border border-blue-500/30">
                   ${usd}
@@ -146,15 +145,14 @@ export default function HeaderBar({ usd, setUsd, leverage, setLeverage, isCross,
               </div>
             </div>
 
-            {/* Power */}
+            {/* Leverage */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex flex-col">
                   <label className="text-sm font-bold text-blue-200 flex items-center gap-2">
                     <span>⚡</span>
-                    <span>Power</span>
+                    <span>Leverage</span>
                   </label>
-                  <span className="text-xs text-cyan-400 mt-0.5">Leverage multiplier</span>
                 </div>
                 <div className="text-sm font-bold text-white bg-cyan-600/20 px-3 py-1 rounded-full border border-cyan-500/30">
                   {leverage}x
@@ -177,8 +175,8 @@ export default function HeaderBar({ usd, setUsd, leverage, setLeverage, isCross,
                 <span>⚡</span>
                 <span>Extreme</span>
               </div>
-              <div className="text-xs text-blue-300 text-center mt-1">
-                Total: ${Number(notional).toLocaleString()}
+              <div className="text-lg font-bold text-white text-center mt-2 bg-gradient-to-r from-cyan-500/20 to-blue-600/20 px-3 py-2 rounded-lg border border-cyan-500/30">
+                ⚡ Total: ${Number(notional).toLocaleString()}
               </div>
             </div>
 
