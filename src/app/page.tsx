@@ -5,6 +5,7 @@ import SwipeDeck from '@/components/SwipeDeck';
 import BottomNav from '@/components/BottomNav';
 import ErrorModal from '@/components/ErrorModal';
 import SuccessModal from '@/components/SuccessModal';
+import PoweredBy from '@/components/PoweredBy';
 import { HeaderProvider, useHeader } from '@/contexts/HeaderContext';
 import { useAgentWallet } from '@/hooks/useAgentWallet';
 import { useState } from 'react';
@@ -41,6 +42,7 @@ function HomeContent() {
         <SwipeDeck usd={usd} isCross={isCross} leverage={leverage} />
       </div>
       <BottomNav />
+      <PoweredBy />
       
       {/* Error Modal */}
       <ErrorModal
